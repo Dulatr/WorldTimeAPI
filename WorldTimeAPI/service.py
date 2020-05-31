@@ -16,7 +16,7 @@ class Client:
         
         # for the timezone endpoint, define a regions list property
         if endpoint == 'timezone':
-            self.regions = lambda: self.get(**{})
+            self.regions = lambda: self.get(**{"area":''})
         
         self._url = "http://worldtimeapi.org/api/" + endpoint
     
@@ -32,10 +32,14 @@ class Client:
         
         if ('area' in keys):
             args += '/' + payload['area']
+        else:
+            raise KeyError("Missing key 'area' for payload.")
         if ('location' in keys):
             args += '/' + payload['location']
-        if ('region' in keys):
+        if ('location' in keys) and ('region' in keys):
             args += '/' + payload['region']
+        elif not ('location' in keys) and ('region' in keys):
+            raise KeyError("Missing key 'location' with supplied region.")
 
         response = req.get(self._url + args).json()
         
