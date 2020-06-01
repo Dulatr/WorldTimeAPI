@@ -18,13 +18,23 @@ class Client:
         if endpoint == 'timezone':
             self.regions = lambda: self.get(**{"area":''})
         
+        self._endpoint = endpoint
         self._url = "http://worldtimeapi.org/api/" + endpoint
     
     def get(self,**payload):
+
         checkPayload(payload)    
         params = ('area','location','region')
         keys = payload.keys()
-        args = ''
+        args = ''    
+
+        if payload == {} and self._endpoint == 'ip':
+            response = req.get(self._url)
+            if response.status_code != 200:
+                return ErrorJson(**{"error":f"Error: response code {response.status_code} returned."})
+            return DateTimeJson(**response.json())
+        elif self._endpoint == 'ip' and payload != {}:
+            raise KeyError("ip endpoint takes no payload argument.")
         
         for item in keys:
             if not (item in params):
@@ -53,6 +63,9 @@ class Client:
     @property
     def url(self):
         return self._url
+    @property
+    def endpoint(self):
+        return self._endpoint
 
 def checkPayload(payload):
         if not isinstance(payload,dict):
