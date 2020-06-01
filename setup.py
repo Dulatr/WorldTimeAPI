@@ -5,7 +5,7 @@ with open("README.md",'r') as f:
 
 setuptools.setup(
     name="world-time-api",
-    version='2020.05.28',
+    version='2020.05.31',
     author='Tyler Dula',
     author_email='echo.dulatr@gmail.com',
     description='A wrapper for the World Time API.',
